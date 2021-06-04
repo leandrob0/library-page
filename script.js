@@ -45,8 +45,12 @@ buttonAdd.addEventListener('click', ()=> {
     newDiv.classList.add("book");
 
     myBooks.addBookToLibrary(askName(), askAuthor(), askPages(), askStatus());
+    const newText = document.createElement("p");
+
+    newText.innerText = '"'+ myLibrary[myLibrary.length - 1].name + '"';
 
     bookContainer.appendChild(newDiv);
+    newDiv.appendChild(newText);
 });
 
 console.log(myLibrary);
