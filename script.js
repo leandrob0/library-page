@@ -1,5 +1,34 @@
-let myLibrary = [];
+let myLibrary = []; //Books array.
 
+class Book {
+    constructor(name, author, pages, read) {
+        this.name = name;
+        this.author = author;
+        this.pages = pages;
+        this.read = read;
+    }
+
+    addBookToLibrary(name, author, pages, read) {
+        this.name = name;
+        this.author = author;
+        this.pages = pages;
+        this.read = read;
+
+        myLibrary.push({name, author, pages, read});
+    }
+
+    removeBookFromLibrary(id) {
+        myLibrary.splice(id, 1);
+    }
+}
+
+/* 
+******************************************
+
+FUNCTIONS TO BE USED
+
+******************************************
+*/
 function askName() {
     let name = prompt("Name of the book:");
     return name;
@@ -26,6 +55,7 @@ function addBookVisual() {
     newDiv.classList.add('book');
     child1.classList.add('behind');
     child2.classList.add('cover');
+    child1.setAttribute('data-attribute', (myLibrary.length - 1).toString());
     infoContainer.classList.add('info');
 
     //CREATE THE TEXTS AND SET THEM
@@ -57,23 +87,29 @@ function addBookVisual() {
     newDiv.appendChild(child2);
 }
 
-class Book {
-    constructor(name, author, pages, read) {
-        this.name = name;
-        this.author = author;
-        this.pages = pages;
-        this.read = read;
-    }
-
-    addBookToLibrary(name, author, pages, read) {
-        this.name = name;
-        this.author = author;
-        this.pages = pages;
-        this.read = read;
-
-        myLibrary.push({name, author, pages, read});
+//THE FOLLOWING TWO FUNCTIONS DELETE A NODE AND ITS CHILDS 
+//Code from https://stackoverflow.com/questions/32259635/recursively-remove-all-nested-nodes-in-javascript
+function clearInner(node) {
+    while (node.hasChildNodes()) {
+      clear(node.firstChild);
     }
 }
+
+function clear(node) {
+    while (node.hasChildNodes()) {
+      clear(node.firstChild);
+    }
+    node.parentNode.removeChild(node);
+    console.log(node, "clear");
+}
+
+/*
+******************************************
+
+EVENTS LISTENERS HANDLERS 
+
+******************************************
+*/
 
 //ADD BOOK EVEN LISTENER
 const myBooks = new Book("default","default",0,"--");
@@ -89,13 +125,25 @@ buttonAdd.addEventListener('click', ()=> {
 const buttonRemove = document.querySelector("#toggle");
 let toggle = true;
 
-function removeShadow(element) {
+function removeShadow() {
     const spine = document.getElementsByClassName("behind");
     Array.from(spine).forEach(element => {
         element.classList.remove("shadow");
     });
 }
 
+function deleteElement(event) {
+    const nodeBook = event.target.parentNode;
+    myBooks.removeBookFromLibrary(event.target.getAttribute('data-attribute'));
+    clearInner(nodeBook);
+    clear(nodeBook);
+}
+
+/*
+******************************************
+LOGIC FOR THE DELETE BUTTONS VISUALS.
+******************************************
+*/
 buttonRemove.addEventListener('click', () => {
     const spine = document.getElementsByClassName("behind");
     if(Array.from(spine).length == 0) {
@@ -109,6 +157,7 @@ buttonRemove.addEventListener('click', () => {
                 element.classList.add("shadow");
             });
             element.addEventListener('mouseleave', removeShadow);
+            element.addEventListener('click', deleteElement);
 
             //CHANGES THE SPINE COLOR AND ADDS THE TEXT
             element.style.backgroundColor = 'WHITE';
@@ -123,6 +172,7 @@ buttonRemove.addEventListener('click', () => {
                 element.classList.remove("shadow");
             });
             element.removeEventListener('mouseleave', removeShadow);
+            element.removeEventListener('click', deleteElement);
 
             //REMOVES EVERY STYLE ADDED BY THE DELETE FUNCTION
             element.innerText = "";
