@@ -160,10 +160,42 @@ a {
 
 .shadow {
     box-shadow: -3px 0 5px 1px rgb(255, 92, 92);
+    cursor: pointer;
 }
 
 @media (max-width: 600px) {
     #middle-text{
         display: none;
     } 
+}
+
+
+/* 
+-
+-
+SETS THE RESPONSIVNESS FOR THE GRID LAYOUT 
+-
+-
+*/
+@media screen {
+    @media (max-width: 1250px) {
+        #library{
+            grid-template-columns: repeat(5, 1fr);
+        } 
+        @media (max-width: 1010px) {
+            #library{
+                grid-template-columns: repeat(4, 1fr);
+            } 
+            @media (max-width: 800px) {
+                #library{
+                    grid-template-columns: repeat(3, 1fr);
+                } 
+                @media (max-width: 600px) {
+                    #library{
+                        grid-template-columns: repeat(2, 1fr);
+                    } 
+                }
+            }
+        }
+    }
 }
