@@ -20,6 +20,10 @@ class Book {
     removeBookFromLibrary(id) {
         myLibrary.splice(id, 1);
     }
+
+    toggleReadStatus(id) {
+        (myLibrary[id].read == 'yes') ? myLibrary[id].read = 'no' : myLibrary[id].read = 'yes';
+    }
 }
 
 /* 
@@ -51,11 +55,14 @@ function addBookVisual() {
     const newDiv = document.createElement("div");
     const child1 = document.createElement("div");
     const child2 = document.createElement("div");
+    const readToggle = document.createElement("div");
+    const buttonToggle = document.createElement("button");
     const infoContainer = document.createElement("div");
     newDiv.classList.add('book');
     child1.classList.add('behind');
     child2.classList.add('cover');
-    child1.setAttribute('data-attribute', (myLibrary.length - 1).toString());
+    buttonToggle.classList.add('button-toggle');
+    newDiv.setAttribute('data-attribute', (myLibrary.length - 1).toString());
     infoContainer.classList.add('info');
 
     //CREATE THE TEXTS AND SET THEM
@@ -65,24 +72,21 @@ function addBookVisual() {
     author.classList.add('book-info');
     const pages = document.createElement("p");
     pages.classList.add('book-info');
-    const read = document.createElement("p");
-    read.classList.add('book-info');
 
     let lenghtLibrary = myLibrary.length - 1;
 
     title.innerText = '"'+ myLibrary[lenghtLibrary].name + '"';
     author.innerText = myLibrary[lenghtLibrary].author;
     pages.innerText = 'Pages: '+ myLibrary[lenghtLibrary].pages;
-
-    (myLibrary[lenghtLibrary].read == "yes") ? read.innerText = "Already read" : read.innerText = "Not read";
+    buttonToggle.innerText = "read";
 
     //APPEND EVERYTHING
     bookContainer.appendChild(newDiv);
     child2.appendChild(title);
     infoContainer.appendChild(author);
     infoContainer.appendChild(pages);
-    infoContainer.appendChild(read);
     child2.appendChild(infoContainer);
+    child2.appendChild(buttonToggle);
     newDiv.appendChild(child1);
     newDiv.appendChild(child2);
 }
@@ -182,3 +186,17 @@ buttonRemove.addEventListener('click', () => {
         toggle = true;
     }
 });
+
+/* 
+******************************************
+LOGIC FOR THE TOGGLE READ BUTTON
+******************************************
+*/
+function toggleRead(event) {
+    console.log(event.target);
+    console.log(event.target.getAttribute("data-attribute"));
+    myBooks.toggleReadStatus(event.target.getAttribute("data-attribute"));
+}
+
+const buttonsRead = document.getElementsByClassName("button-toggle");
+Array.from(buttonsRead).forEach(button => button.addEventListener('click', toggleRead));
