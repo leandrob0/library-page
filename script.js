@@ -33,23 +33,6 @@ FUNCTIONS TO BE USED
 
 ******************************************
 */
-function askName() {
-    let name = prompt("Name of the book:");
-    return name;
-}
-function askAuthor() {
-    let author = prompt("Author of the book:");
-    return author;
-}
-function askPages() {
-    let pages = prompt("Pages of the book:");
-    return pages;
-}
-function askStatus() {
-    let status = prompt("Have you read the book(yes or no):");
-    return status;
-}
-
 function addBookVisual() {
     //CREATE ALL THE DIVS TO BE USED WITH THEIR RESPECTIVES ID
     const newDiv = document.createElement("div");
@@ -78,7 +61,7 @@ function addBookVisual() {
     title.innerText = '"'+ myLibrary[lenghtLibrary].name + '"';
     author.innerText = myLibrary[lenghtLibrary].author;
     pages.innerText = 'Pages: '+ myLibrary[lenghtLibrary].pages;
-    buttonToggle.innerText = "read";
+    buttonToggle.innerText = "read status";
 
     //APPEND EVERYTHING
     bookContainer.appendChild(newDiv);
@@ -119,10 +102,55 @@ EVENTS LISTENERS HANDLERS
 const myBooks = new Book("default","default",0,"--");
 const bookContainer = document.querySelector("#library");
 const buttonAdd = document.querySelector("#add");
+const buttonOutOfForm = document.querySelector("#close-button");
+const form = document.querySelector("#myForm");
+const formSubmit = document.querySelector("input[type='button']");
 
 buttonAdd.addEventListener('click', ()=> {
-    myBooks.addBookToLibrary(askName(), askAuthor(), askPages(), askStatus());
+    form.style.display = "block";
+    bookContainer.classList.add("library-blur");
+});
+
+formSubmit.addEventListener('click', () => {
+    let title = document.getElementById('title').value;
+    let author = document.getElementById('author').value;
+    let pages = document.getElementById('pages').value;
+
+    if(title === "" || author === "" || pages === "") {
+        alert("not valid inputs");
+        return false;
+    }
+
+    myBooks.addBookToLibrary(title, author, pages, '');
     addBookVisual();
+
+    form.style.display = "none";
+    bookContainer.classList.remove("library-blur");
+
+    //ADD THE READ BUTTON FUNCTIONALITY
+    const buttonsChangeStatus = document.getElementsByClassName("button-toggle");
+    let arrayButtons = Array.from(buttonsChangeStatus);
+    let buttonToAdd = arrayButtons[myLibrary.length - 1]; //GETS THE LAST BUTTON ADDED
+
+    buttonToAdd.addEventListener("click", () => {
+        let idOfTheBook = buttonToAdd.parentNode.parentNode.getAttribute("data-attribute");
+        console.log(idOfTheBook);
+        if(buttonToAdd.innerText === "Not read" || buttonToAdd.innerText === "read status") 
+        {
+            buttonToAdd.style.backgroundColor = "#C2FF52";
+            myLibrary[idOfTheBook].read == "yes";
+            buttonToAdd.innerText = "Read";
+        } else {
+            buttonToAdd.style.backgroundColor = "#FF4F25";
+            buttonToAdd.innerText = "Not read";
+            myLibrary[idOfTheBook].read == "no";
+        }
+    });
+});
+
+buttonOutOfForm.addEventListener("click", () => {
+    form.style.display = "none";
+    bookContainer.classList.remove("library-blur");
 });
 
 //REMOVE BOOK EVENT LISTENER
@@ -192,11 +220,6 @@ buttonRemove.addEventListener('click', () => {
 LOGIC FOR THE TOGGLE READ BUTTON
 ******************************************
 */
-function toggleRead(event) {
-    console.log(event.target);
-    console.log(event.target.getAttribute("data-attribute"));
-    myBooks.toggleReadStatus(event.target.getAttribute("data-attribute"));
-}
+const buttonsChangeStatus = document.getElementsByClassName("cover");
 
-const buttonsRead = document.getElementsByClassName("button-toggle");
-Array.from(buttonsRead).forEach(button => button.addEventListener('click', toggleRead));
+Array.from(buttonsChangeStatus).forEach(button => button.addEventListener("click", ));
