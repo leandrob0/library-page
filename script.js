@@ -214,12 +214,3 @@ buttonRemove.addEventListener('click', () => {
         toggle = true;
     }
 });
-
-/* 
-******************************************
-LOGIC FOR THE TOGGLE READ BUTTON
-******************************************
-*/
-const buttonsChangeStatus = document.getElementsByClassName("cover");
-
-Array.from(buttonsChangeStatus).forEach(button => button.addEventListener("click", ));
